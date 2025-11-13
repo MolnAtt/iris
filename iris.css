@@ -1,0 +1,26 @@
+body{
+
+}
+
+header h1{
+    text-align: center;
+    padding: 20px;
+}
+
+main{
+    display: grid;
+    grid-template-columns: 1000px 200px 200px;
+    justify-content: center;
+    gap:5px;
+}
+
+.eros{
+    stroke-width: 2;
+    stroke:black;
+}
+
+.halvany{
+    stroke-width: 2;
+    stroke:rgba(0, 0, 0, 0.3);
+}
+
