@@ -25,5 +25,11 @@ function vonal(P,Q, klassz=""){
     vaszon.appendChild(v);
 }
 
+function kor(P, r, klassz=""){
+
+}
+
+
+
 
 koordinatarendszer_keszitese();
