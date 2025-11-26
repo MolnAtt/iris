@@ -24,3 +24,20 @@ main{
     stroke:rgba(0, 0, 0, 0.3);
 }
 
+
+.fekete{
+    stroke-width: 2;
+    stroke:rgba(0, 0, 0, 0.8);
+}
+
+.borzas{
+    fill:blue;
+}
+
+.foltos{
+    fill: red;
+}
+
+.virginiai{
+    fill: yellow;
+}
