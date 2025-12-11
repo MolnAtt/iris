@@ -1,20 +1,27 @@
+const vaszon = document.getElementById('vaszon');
+
+
+/**
+ * Készít egy koordinátarendszer
+ */
 function koordinatarendszer_keszitese(){
     for (let i = 0; i <= 1000; i+=100) {
         vonal([i,0],[i,25], "eros");
         vonal([0,i],[25,i], "eros");        
     }
-
     for (let i = 0; i <= 1000; i+=100) {
         vonal([i,0],[i,1000], "halvany");
         vonal([0,i],[1000,i], "halvany");
     }
-
 }
 
 
-
-
-// ez egy olyan függvény, ami a vászonra rajzol két pontpár közé egy vonalat.
+/**
+ * Két pont közé rajzol egy vonalat, és ellátja a megfelelő classname-mel
+ * @param {Array<number>} P 
+ * @param {Array<number>} Q 
+ * @param {string} klassz 
+ */
 function vonal(P,Q, klassz=""){
     let v = document.createElementNS('http://www.w3.org/2000/svg','line');     //<line />
     v.setAttribute('x1', P[0]); //<line x1="0"/>
@@ -25,6 +32,12 @@ function vonal(P,Q, klassz=""){
     vaszon.appendChild(v);
 }
 
+/**
+ * adott P pont körül r sugárral rajzol egy kört, ad neki egy class-t.
+ * @param {Array<number>} P 
+ * @param {number} r 
+ * @param {string} klassz 
+ */
 function kor(P, r, klassz=""){
     let k = document.createElementNS('http://www.w3.org/2000/svg','circle');     //<circle />
     k.setAttribute('cx', P[0]); //<line cx="0"/>
@@ -33,6 +46,7 @@ function kor(P, r, klassz=""){
     k.classList.add(klassz);
     vaszon.appendChild(k);
 }
+
 
 class Noszirom {
     constructor(sor){   // sor = "5.0,3.4,1.5,0.2,Iris-setosa"
@@ -45,6 +59,10 @@ class Noszirom {
     }
 }
 
+/**
+ * beolvassa a textarea inputról a dolgokat
+ * @returns {Array<Noszirom>}
+ */
 function beolvas(){
     // Olvasd be a "textarea-input" id-val rendelkező textarea-ból a "csv-fájlt". 
     // 
@@ -64,9 +82,14 @@ function beolvas(){
 
 const mertekx = 300;
 const merteky = 120;
+let noszirmok;
 
+/**
+ * Ez ábrázolta az összes adatpontot
+ * @param {MouseEvent} e 
+ */
 function plot_petal(e){
-    let noszirmok = beolvas();
+    noszirmok = beolvas();
     for (const noszirom of noszirmok) {
         let P = [noszirom.petal_width*mertekx, noszirom.petal_length*merteky];
         let r = 5;
@@ -83,17 +106,47 @@ function plot_petal(e){
     }
 }
 
-
-
-function tavolsag(P, Q){
-    return Math.sqrt((P[0]-Q[0])*(P[0]-Q[0]) + (P[1]-Q[1])*(P[1]-Q[1]));
+/**
+ * Két pont euklideszi távolsága (pitagorasz-tétel)
+ * @param {Array<number>} P 
+ * @param {Array<number>} Q 
+ * @returns {number}
+ */
+function Euklideszi_tavolsag(P, Q){
+    let sum = 0;
+    for (let i = 0; i < P.length; i++) {
+        sum+=(P[i]-Q[i])*(P[i]-Q[i]);
+    }
+    return Math.sqrt(sum);
 }
 
-function sorbarendezes(lista, X, Y ){
-    let rendezett_lista = lista.slice();
+/**
+ * Két pont Manhattan távolsága (eltérésösszegek)
+ * @param {Array<number>} P 
+ * @param {Array<number>} Q 
+ * @returns {number}
+ */
+function Manhattan_tavolsag(P, Q){
+    let sum = 0;
+    for (let i = 0; i < P.length; i++) {
+        sum+=Math.abs(P[i]-Q[i]);
+    }
+    return sum;
+}
+
+/**
+ * sorbarendezi egy adott ponthoz való közelség alapján a pontokat
+ * @param {Array<Noszirom>} lista 
+ * @param {number} X 
+ * @param {number} Y 
+ * @param {function} tavolsagfv 
+ * @returns 
+ */
+function sorbarendezes(lista, X, Y, tavolsagfv ){
+    let rendezett_lista = lista.slice(); // a lista lemásolása
     rendezett_lista.sort( (I1,I2) => {
-        let egyik_tavolsaga = tavolsag([I1.petal_length, I1.petal_width], [X,Y]);
-        let masik_tavolsaga = tavolsag([I2.petal_length, I2.petal_width], [X,Y]);
+        let egyik_tavolsaga = tavolsagfv([I1.petal_length, I1.petal_width], [X,Y]);
+        let masik_tavolsaga = tavolsagfv([I2.petal_length, I2.petal_width], [X,Y]);
         if(egyik_tavolsaga < masik_tavolsaga)
             return -1;
         else if (egyik_tavolsaga == masik_tavolsaga)
@@ -103,7 +156,8 @@ function sorbarendezes(lista, X, Y ){
     return rendezett_lista;
 }
 
-function k_nearest_neighbours(this_petal_length, this_petal_width, K){
+
+function k_nearest_neighbours(lista, this_petal_length, this_petal_width, K){
     // supervised learning
 
     // 1. vesszük a K db legközelebbi pontot.
@@ -114,6 +168,49 @@ function k_nearest_neighbours(this_petal_length, this_petal_width, K){
     // 3. A legtöbb "szavazatot" kapó típusra tippelünk.
     // 3.1      Maximumkeresés a dictionary-n
 
+    let rendezett_lista = sorbarendezes(lista, this_petal_length, this_petal_width, Euklideszi_tavolsag);
+
+    // for (const elem of rendezett_lista) {
+    //     console.log(`${elem.tipus}: petal_length=${elem.petal_length}, petal_width=${elem.petal_width}, tav=${Euklideszi_tavolsag([this_petal_length, this_petal_width], [elem.petal_length, elem.petal_width])}`);
+    // }
+
+    let kivalasztottak = rendezett_lista.slice(0,K);
+    // console.log(kivalasztottak);
+    // for (const elem of kivalasztottak) {
+    //     console.log(`${elem.tipus}: [${elem.petal_length}, ${elem.petal_width}], tav=${Euklideszi_tavolsag([this_petal_length, this_petal_width], [elem.petal_length, elem.petal_width])}`);
+    // }
+
+    szotar = {};
+    for (const noszirom of kivalasztottak) {
+        if (noszirom.tipus in szotar)
+        {
+            szotar[noszirom.tipus] += 1;
+        } else {
+            szotar[noszirom.tipus] = 1;
+        }
+    }
+    console.log(szotar);
+    // szavazás:
+    // 'Iris-setosa': 3
+    // 'Iris-versicolor': 2
+    // 'Iris-virginica': 1
+
+    //és most maximumkeresés...
+
+    // for (const tipusok of Object.keys(szotar)) {
+        
+    // }
+
+    let best = '';
+    let best_ertek = -1;
+
+    for (const tipus in szotar) {
+        if (best_ertek < szotar[tipus]){
+            best_ertek = szotar[tipus];
+            best = tipus;
+        }
+    }
+    return best;
 }
 
 
@@ -126,10 +223,11 @@ function svg_katt(e){
     e.preventDefault();
     let br = vaszon.getBoundingClientRect();
     let a = {"X": e.clientX - br.x, "Y": e.clientY - br.y};
-    console.log(a);
+    // console.log(a);
     let petal_width  = a.X/mertekx;
     let petal_length = a.Y/merteky;
-    let nsz_t = k_nearest_neighbours(petal_width, petal_length, 5);
+    console.log([petal_width,petal_length])
+    let nsz_t = k_nearest_neighbours(noszirmok, petal_length, petal_width, 5);
     
     console.log(nsz_t);
 }
