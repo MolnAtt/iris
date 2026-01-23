@@ -232,5 +232,55 @@ function svg_katt(e){
     console.log(nsz_t);
 }
 
+
+function veletlen_egesz(start, end){
+    const hossz = end-start+1;
+    return start+Math.floor(Math.random()*hossz);
+}
+
+function csere(t, i, j){
+    const temp = t[j];
+    t[j] = t[i];
+    t[i] = temp;
+}
+
+function kever(t){
+    for (let i = 0; i < t.length; i++) {
+        const huzas = veletlen_egesz(i,t.length-1);
+        csere(t, i, huzas);
+    }
+}
+
+function masolat(t){
+    let masolat = [];
+    for (let i = 0; i < t.length; i++) {
+        masolat[i] = t[i];
+    }
+    return masolat;
+}
+
+function visszateves_nelkuli_mintavetel(K, adatok){
+    const kevert = masolat(adatok);
+    kever(kevert);
+    return kevert.slice(K);
+}
+
+function centroidok_kivalasztasa(K, adatok){
+    result = [];
+    for (let i = 0; i < K; i++) {
+        result[i] = [adatok[i].petal_length, adatok[i].petal_width];
+    }
+    return result
+} // -> visszaad K darab (x,y) koordinátájú pontot. Ezek a centroidok
+
+
+function csoportba_besorolas(adat, csoportok, centroid){
+
+} // -> az adott adatot beleteszi a megfelelő csoportba
+
+function legjobb_centroidok(osszes_centroidok_listaja, adatok){
+
+}//-> visszaadja a legjobb centroidokat.
+
 vaszon.addEventListener('click', svg_katt);
 
