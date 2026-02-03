@@ -1,0 +1,78 @@
+body{
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    color:whitesmoke;
+    background-color: #222;
+}
+textarea{
+    background-color: #333;
+    color: whitesmoke;
+    border: none;
+    padding: 10px;
+    /* resize: none; */
+}
+
+header h1{
+    text-align: center;
+    padding: 20px;
+}
+
+main{
+    display: grid;
+    grid-template-columns: 1000px 300px 200px;
+    justify-content: center;
+    gap:5px;
+}
+
+.eros{
+    stroke-width: 2;
+    stroke: whitesmoke;
+}
+
+.halvany{
+    stroke-width: 2;
+    stroke: rgba(245, 245, 245, 0.3);
+}
+
+
+.fekete{
+    stroke-width: 2;
+    stroke: rgba(245, 245, 245, 0.8);
+}
+
+.adatpont{
+    /* stroke-width: 1; */
+}
+
+#gomb-container{
+    display: grid;
+    grid-template-columns: 100px 150px;
+    grid-auto-rows: 30px;
+    justify-content: center;
+    gap:10px;
+    margin: 20px;
+
+}
+
+#gomb-container button, #gomb-container hr{
+    grid-column: 1 / -1;
+    width: 100%;
+}
+
+#gomb-container h2, #KNN_result{
+    grid-column: 1 / -1;
+    width: 100%;
+    margin:0;
+}
+
+h2{
+    text-align: center;
+}
+
+
+
+line{
+    stroke:whitesmoke;
+    stroke-width:1;
+}

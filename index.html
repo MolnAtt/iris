@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Íriszek</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="svg.js" defer></script>
+    <script src="adat_es_vizualizacio.js" defer></script>
+</head>
+<body>
+    <header>
+        <h1>Kétdimenziós adatvizualizáció, supervised és unsupervised learning</h1>
+    </header>
+    <main>
+        <div id="svg-container">
+            <svg width="1000" height="1000" xmlns="http://www.w3.org/2000/svg" id="vaszon">
+                <!-- <circle cx="50" cy="50" r="40" stroke="green" stroke-width="4" fill="yellow" /> -->
+                <line x1="0" y1="0" x2="1000" y2="0" class="eros" />
+                <line x1="0" y1="0" x2="0" y2="1000" class="eros" />
+                <!-- <line x1="0" y1="0" x2="1000" y2="1000" style="stroke:rgb(0, 0, 0);stroke-width:2" /> -->
+            </svg>
+        </div>
+        <div id="gomb-container">
+            <h2>Adatok</h2>
+            <button id="beolvasas_gomb">Beolvasás</button>
+            <label for="separator" title="Elválasztó karakter">Elválasztójel:</label>
+            <input type="text" name="separator" id="separator" value=",">
+            <button id="abrazolas_gomb">Ábrázolás</button>
+            <label for="kormeret" title="adatpontok mérete">Pontméret:</label>
+            <input type="number" name="kormeret" id="kormeret" step="1" value="5">
+            <label for="kategoriak">
+                kategoriatípus:
+            </label>
+            <select id="kategoriak">
+            </select>         
+            <label for="xtengely">
+                X tengely:
+            </label>
+            <select id="xtengely">
+                <option value="x_sepal_length">sepal_length</option>
+                <option value="x_sepal_width">sepal_width</option>
+                <option value="x_petal_length" selected>petal_length</option>
+                <option value="x_petal_width">petal_width</option>
+            </select>
+            <label for="ytengely">
+                Y tengely:
+            </label>
+            <select id="ytengely">
+                <option value="y_sepal_length">sepal_length</option>
+                <option value="y_sepal_width">sepal_width</option>
+                <option value="y_petal_length">petal_length</option>
+                <option value="y_petal_width" selected>petal_width</option>
+            </select>
+            <label for="x_min">X minimuma:</label>
+            <input type="number" id="x_min" step="0.1" value="0">
+            <label for="x_max">X maximuma:</label>
+            <input type="number" id="x_max" step="0.1" value="8">
+            <label for="y_min">Y minimuma:</label>
+            <input type="number" id="y_min" step="0.1" value="0">
+            <label for="y_max">Y maximuma:</label>
+            <input type="number" id="y_max" step="0.1" value="3">
+
+            <h2>K nearest neighbours</h2>
+            <button id="milyen_virag">Milyen virág lenne itt?</button>
+            <div id="KNN_result">?</div>
+            <label for="k_input" title="Hány szomszéd alapján döntsön?">K értéke:</label>
+            <input type="number" id="KNN_K" step="1" value="3">
+            <label for="KNN_tavolsag_select">Metrika:</label>
+            <select id="KNN_tavolsag_select">
+                <option value="KNN_Manhattan">Manhattan</option>
+                <option value="KNN_Euklideszi">Euklideszi</option>
+            </select>
+            <label for="KNN_xtengely">
+                X tengely:
+            </label>
+            <select id="KNN_xtengely">
+                <option value="x_sepal_length">sepal_length</option>
+                <option value="x_sepal_width">sepal_width</option>
+                <option value="x_petal_length" selected>petal_length</option>
+                <option value="x_petal_width">petal_width</option>
+            </select>
+            <label for="ytengely">
+                Y tengely:
+            </label>
+            <select id="ytengely">
+                <option value="y_sepal_length">sepal_length</option>
+                <option value="y_sepal_width">sepal_width</option>
+                <option value="y_petal_length">petal_length</option>
+                <option value="y_petal_width" selected>petal_width</option>
+            </select>
+            <label for="KNN_x">X értéke:</label>
+            <input type="number" id="KNN_x" step="0.1" value = "4">
+            <label for="KNN_y">Y értéke:</label>
+            <input type="number" id="KNN_y" step="0.1" value = "1.5">
+            
+            <h2>K means clustering</h2>
+            <button id="milyen_virag">Kategorizálás</button>
+            <label for="k_input" title="Hány kategóriát alakítson ki?">K értéke:</label>
+            <input type="number" id="KMC_K" step="1" value="3">
+            <label for="k_input">Iterációk:</label>
+            <input type="number" id="KMC_iteraciok" step="1" value="1000">
+            <label for="KMC_tavolsag_select">Metrika:</label>
+            <select id="KMC_tavolsag_select">
+                <option value="KMC_Manhattan">Manhattan</option>
+                <option value="KMC_Euklideszi">Euklideszi</option>
+            </select>
+            <label for="KMC_xtengely">
+                X tengely:
+            </label>
+            <select id="KMC_xtengely">
+                <option value="x_sepal_length">sepal_length</option>
+                <option value="x_sepal_width">sepal_width</option>
+                <option value="x_petal_length" selected>petal_length</option>
+                <option value="x_petal_width">petal_width</option>
+            </select>
+            <label for="KMC_ytengely">
+                Y tengely:
+            </label>
+            <select id="KMC_ytengely">
+                <option value="y_sepal_length">sepal_length</option>
+                <option value="y_sepal_width">sepal_width</option>
+                <option value="y_petal_length">petal_length</option>
+                <option value="y_petal_width" selected>petal_width</option>
+            </select>
+            <label for="KMC_color_1">1. kategória:</label>
+            <input type="color" name="KMC_color_1" id="KMC_color_1" value="#e41a1c">
+            <label for="KMC_color_2">2. kategória:</label>
+            <input type="color" name="KMC_color_2" id="KMC_color_2" value="#377eb8">
+            <label for="KMC_color_3">3. kategória:</label>
+            <input type="color" name="KMC_color_3" id="KMC_color_3" value="#4daf4a">
+            <label for="KMC_color_4">4. kategória:</label>
+            <input type="color" name="KMC_color_4" id="KMC_color_4" value="#984ea3">
+            <label for="KMC_color_5">5. kategória:</label>
+            <input type="color" name="KMC_color_5" id="KMC_color_5" value="#ff7f00">
+            <label for="KMC_color_6">6. kategória:</label>
+            <input type="color" name="KMC_color_6" id="KMC_color_6" value="#ffff33">
+            <label for="KMC_color_7">7. kategória:</label>
+            <input type="color" name="KMC_color_7" id="KMC_color_7" value="#a65628">
+            <label for="KMC_color_8">8. kategória:</label>
+            <input type="color" name="KMC_color_8" id="KMC_color_8" value="#f781bf">
+            <label for="KMC_color_9">9. kategória:</label>
+            <input type="color" name="KMC_color_9" id="KMC_color_9" value="#999999">
+            <label for="KMC_color_10">10. kategória:</label>
+            <input type="color" name="KMC_color_10" id="KMC_color_10" value="#00ced1">
+        </div>
+        <div id="input-container">
+            <h2>Adatbázis</h2>
+            <p>Ide másold a tsv fájl tartalmát! Az első sorok (a mezőnevek) lesznek a választható tengelyek.</p>
+            <textarea id="textarea-input" cols="15" rows="30"></textarea>
+        </div>
+    </main>
+</body>
+</html>
